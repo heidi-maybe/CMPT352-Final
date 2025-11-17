@@ -9,7 +9,7 @@
 import java.io.*;
 import java.net.*;
 
-public class ProxyHandler {
+public class Handler {
 
     
 }
