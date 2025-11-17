@@ -6,10 +6,12 @@
  * @author Jack Brinkman & Heidi Andre 
  */
 
-import java.io.*;
+
 import java.net.*;
+import java.io.*;
 
-public class Handler {
+public class Connection implements Runnable {
 
-    
+
+
 }

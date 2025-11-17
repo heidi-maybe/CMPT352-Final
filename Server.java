@@ -14,7 +14,13 @@ import java.util.concurrent.Executors;
 
 
 public class Server {
+    public static final int DEFAULT_PORT = 8080;
 
 
+    private static final Executor exec = Executors.newVirtualThreadPerTaskExecutor();
 
+    public static void main(String[] args) throws IOException {
+        ServerSocket sock = null;
+
+    }
 }
