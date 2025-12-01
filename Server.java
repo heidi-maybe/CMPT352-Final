@@ -41,7 +41,7 @@ public class Server {
 
             while(true){
                 //listen for new connections and service them in a separate thread
-                Runnable task =new Connection(sock.accept());
+                Runnable task = sock.accept());
                 exec.execute(task);
 
             }

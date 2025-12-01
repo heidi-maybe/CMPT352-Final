@@ -7,15 +7,21 @@
  */
 
 
-import java.net.*;
 import java.io.*;
+import java.net.*;
+import java.util.*;
 
 public class Connection implements Runnable {
     private Socket	client;
-	private static Handler handler = new Handler();
+	private Handler handler;
+	private List<Socket> clients;
+	private Vector<String> messageQueue;
 	
-	public Connection(Socket client) {
+	public Connection(Socket client, List<Socket> clients, Vector<String> messageQueue) {
 		this.client = client;
+		this.clients = clients;
+		this.messageQueue = messageQueue;
+		this.handler = new Handler();
 	}
 
     /**
@@ -27,6 +33,13 @@ public class Connection implements Runnable {
 		}
 		catch (java.io.IOException ioe) {
 			System.err.println(ioe);
+		} finally {
+			clients.remove(client);
+			
+			try {
+				if (!client.isClosed())
+				client.close();
+			} catch (IOException e) { }
 		}
 	}
 

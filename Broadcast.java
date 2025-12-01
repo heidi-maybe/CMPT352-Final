@@ -1,3 +1,11 @@
+/**
+ * CMPT 352 Fall 2025
+ * Final Project - Chat Room
+ *      
+ *
+ * @author Jack Brinkman & Heidi Andre 
+ */
+
 import java.io.*;
 import java.net.*;
 import java.util.*;
