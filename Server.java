@@ -7,24 +7,35 @@
  */
 
 
-import java.net.*;
 import java.io.*;
+import java.net.*;
+import java.util.*;
 import java.util.concurrent.*;
 
 
 
 public class Server {
 
-    //port
+    // Default port
     public static final int DEFAULT_PORT = 8080;
 
-    //thread handler
+    // thread handler
     private static final Executor exec = Executors.newVirtualThreadPerTaskExecutor();
+
+    // List tracking all connected Clients
+    private static final List<Socket> clients = new CopyOnWriteArrayList<>();
+
+    // Message queue for broadcasting thread
+    private static final Vector<String> messageQueue = new Vector<>();
+
 
     public static void main(String[] args) throws IOException {
         ServerSocket sock = null;
 
         try{
+            Broadcast broadcasterThread = new Broadcast(clients, messageQueue);
+
+
             //establish the socket
             sock = new ServerSocket(DEFAULT_PORT);
 
