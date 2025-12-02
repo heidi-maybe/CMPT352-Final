@@ -69,6 +69,8 @@ public class MyGUI {
         //make frame visible
         frame.setVisible(true);
 
+        //check
+
     }
 
 
