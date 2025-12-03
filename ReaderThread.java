@@ -1,3 +1,11 @@
+/**
+ * CMPT 352 Fall 2025
+ * Final Project - Chat Room
+ *      
+ *
+ * @author Jack Brinkman & Heidi Andre 
+ */
+
 import java.io.*;
 import java.net.*;
 import javax.swing.*;
@@ -6,9 +14,9 @@ public class ReaderThread implements Runnable
 {
 	Socket server;
 	BufferedReader fromServer;
-	ChatScreen screen;
+	MyGUI screen;
 
-	public ReaderThread(Socket server, ChatScreen screen) {
+	public ReaderThread(Socket server, MyGUI screen) {
 		this.server = server;
 		this.screen = screen;
 	}

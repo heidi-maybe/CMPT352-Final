@@ -33,16 +33,21 @@ public class Server {
         ServerSocket sock = null;
 
         try{
-            Broadcast broadcasterThread = new Broadcast(clients, messageQueue);
-
+            Broadcast broadcaster = new Broadcast(clients, messageQueue);
+            Thread broadcastThread = new Thread(broadcaster);
+            broadcastThread.setDaemon(true);
+			broadcastThread.start();
 
             //establish the socket
             sock = new ServerSocket(DEFAULT_PORT);
 
             while(true){
                 //listen for new connections and service them in a separate thread
-                Runnable task = sock.accept());
-                exec.execute(task);
+                Socket client = sock.accept();
+				clients.add(client);
+				Runnable task = new Connection(client, clients, messageQueue);
+				exec.execute(task);
+
 
             }
 
