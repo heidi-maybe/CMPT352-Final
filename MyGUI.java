@@ -9,11 +9,16 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.*;  
+import java.awt.*;
+import java.io.IOException;
+import java.net.Socket;  
 
 public class MyGUI {
 
-    String[] messageDisplayArray = new String[1000];
+    private JButton sendButton;
+	private JButton exitButton;
+	private JTextField sendText;
+	private JTextArea displayArea;
 
     public MyGUI(){
         //make a frame
@@ -43,8 +48,12 @@ public class MyGUI {
             frame.add(messagePanel, pc);
             
             //add the mesage display to the panel
-            JList<String> messageList = new JList<>(messageDisplayArray);
-            messagePanel.add(messageList);
+            displayArea = new JTextArea(15,40);
+		    displayArea.setEditable(false);
+		    displayArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+		    JScrollPane scrollPane = new JScrollPane(displayArea);
+		    messagePanel.add(scrollPane,"Center");
 
 
 
@@ -186,9 +195,68 @@ public class MyGUI {
 
     }
 
+    public void displayMessage(String message) {
+		displayArea.append(message + "\n");
+	}
 
-    public static void main(String[] args){
-        SwingUtilities.invokeLater(MyGUI::new);
-    }
+    public void displayText() {
+		String message = sendText.getText().trim();
+		StringBuffer buffer = new StringBuffer(message.length());
 
+		// now reverse it
+		for (int i = message.length()-1; i >= 0; i--)
+			buffer.append(message.charAt(i));
+
+		displayArea.append(buffer.toString() + "\n");
+
+		sendText.setText("");
+		sendText.requestFocus();
+	}
+
+
+    /**
+	 * This method responds to action events .... i.e. button clicks
+	 * and fulfills the contract of the ActionListener interface.
+	 */
+    public void actionPerformed(ActionEvent evt) {
+		Object source = evt.getSource();
+
+		if (source == sendButton) 
+			displayText();
+		else if (source == exitButton)
+			System.exit(0);
+	}
+
+    /**
+	 * This is invoked when the user presses
+	 * the ENTER key.
+	 */
+	public void keyPressed(KeyEvent e) { 
+		if (e.getKeyCode() == KeyEvent.VK_ENTER)
+			displayText();
+	}
+
+
+
+
+    public static void main(String[] args) {
+		try {
+			// Parse host:port from first argument
+			String[] hostPort = args[0].split(":");
+			String host = hostPort[0];
+			int port = Integer.parseInt(hostPort[1]);
+
+			Socket annoying = new Socket(host, port);
+			MyGUI win = new MyGUI();
+			win.displayMessage("My name is " + args[1]);
+
+			Thread ReaderThread = new Thread(new ReaderThread(annoying, win));
+
+			ReaderThread.start();
+		}
+		catch (UnknownHostException uhe) { System.out.println(uhe); }
+		catch (IOException ioe) { System.out.println(ioe); }
+
+
+	}
 }
