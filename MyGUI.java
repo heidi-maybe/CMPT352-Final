@@ -7,11 +7,10 @@
  */
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
 import java.awt.*;
-import java.io.IOException;
-import java.net.Socket;  
+import java.awt.event.*;
+import java.io.*;
+import java.net.*;
 
 public class MyGUI {
 
@@ -19,8 +18,12 @@ public class MyGUI {
 	private JButton exitButton;
 	private JTextField sendText;
 	private JTextArea displayArea;
+    private JButton joinButton;
+    private JTextField usernameField;
+    private JTextField portField;
+    private JTextField hostField;
 
-    public MyGUI(){
+    public void MyGUI(){
         //make a frame
         JFrame frame = new JFrame("GUI");
         frame.setSize(new Dimension(400,400));
@@ -137,7 +140,7 @@ public class MyGUI {
                 jpc.weighty = 0.1;
                 jpc.anchor = GridBagConstraints.NORTH;
                 jpc.insets = new Insets(10,10,10,10);
-                JTextField hostField = new JTextField("host",20);
+                hostField = new JTextField("host",20);
                 joinPanel.add(hostField,jpc);
 
                 //add and contrain the port text box on the join panel
@@ -150,7 +153,7 @@ public class MyGUI {
                 jpc1.weighty = 0.1;
                 jpc1.anchor = GridBagConstraints.NORTH;
                 jpc1.insets = new Insets(0,10,0,10);
-                JTextField portField = new JTextField("port",20);
+                portField = new JTextField("port",20);
                 joinPanel.add(portField,jpc1);
 
                 //add and contrain the username text box on the join panel
@@ -163,7 +166,7 @@ public class MyGUI {
                 jpc2.weighty = 0.1;
                 jpc2.anchor = GridBagConstraints.NORTH;
                 jpc2.insets = new Insets(0,10,0,10);
-                JTextField usernameField = new JTextField("username",20);
+                usernameField = new JTextField("username",20);
                 joinPanel.add(usernameField,jpc2);
 
                 //add and constrain panels to push fields closer together
@@ -176,22 +179,18 @@ public class MyGUI {
                 jpc3.weighty = 0.1;
                 jpc3.anchor = GridBagConstraints.NORTH;
                 jpc3.insets = new Insets(10,10,10,10);
-                JButton joinButton = new JButton("Click here to Join");
+                joinButton = new JButton("Click here to Join");
                 joinPanel.add(joinButton,jpc3);
-
-
-                
-
-                
-
-
-            
-        
-            
-
 
         //make frame visible
         frame.setVisible(true);
+        sendText.requestFocus();
+        
+        addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				System.exit(0);
+			}
+		} );
 
     }
 
@@ -203,9 +202,6 @@ public class MyGUI {
 		String message = sendText.getText().trim();
 		StringBuffer buffer = new StringBuffer(message.length());
 
-		// now reverse it
-		for (int i = message.length()-1; i >= 0; i--)
-			buffer.append(message.charAt(i));
 
 		displayArea.append(buffer.toString() + "\n");
 
@@ -225,6 +221,9 @@ public class MyGUI {
 			displayText();
 		else if (source == exitButton)
 			System.exit(0);
+        else if (source == joinButton){
+            join();
+        }
 	}
 
     /**
@@ -236,27 +235,26 @@ public class MyGUI {
 			displayText();
 	}
 
+    public void join(){
+        try {
+			String host = hostField.getText();
+            int port = Integer.parseInt(portField.getText());
+            String username = usernameField.getText();
+			
+            Socket client = new Socket(host, port);
+			
+            win.displayMessage("My name is " + username);
 
-
-
-    public static void main(String[] args) {
-		try {
-			// Parse host:port from first argument
-			String[] hostPort = args[0].split(":");
-			String host = hostPort[0];
-			int port = Integer.parseInt(hostPort[1]);
-
-			Socket annoying = new Socket(host, port);
-			MyGUI win = new MyGUI();
-			win.displayMessage("My name is " + args[1]);
-
-			Thread ReaderThread = new Thread(new ReaderThread(annoying, win));
+			Thread ReaderThread = new Thread(new ReaderThread(client, win));
 
 			ReaderThread.start();
 		}
 		catch (UnknownHostException uhe) { System.out.println(uhe); }
 		catch (IOException ioe) { System.out.println(ioe); }
+    }
+    
 
-
+    public static void main(String[] args) {
+        MyGUI win = new MyGUI();
 	}
 }
