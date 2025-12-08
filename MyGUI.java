@@ -31,7 +31,11 @@ public class MyGUI implements ActionListener, KeyListener{
         frame.setVisible(true);
         GridBagConstraints pc = new GridBagConstraints();
         
+        
         //make a message panel
+        displayArea = new JTextArea(15,40);
+		displayArea.setEditable(false);
+		displayArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
         JScrollPane messagePanel = new JScrollPane(displayArea);
 
         //constraints for the panel on pc
@@ -51,12 +55,7 @@ public class MyGUI implements ActionListener, KeyListener{
             frame.add(messagePanel, pc);
             
             //add the mesage display to the panel
-            displayArea = new JTextArea(15,40);
-		    displayArea.setEditable(false);
-		    displayArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
-
-		    
-		    messagePanel.add(messagePanel,"Center");
+            
 
 
 
@@ -248,6 +247,9 @@ public class MyGUI implements ActionListener, KeyListener{
 		//}
 		//catch (UnknownHostException uhe) { System.out.println(uhe); }
 		//catch (IOException ioe) { System.out.println(ioe); }
+    }
+    public static void main(String[] args){
+        MyGUI win = new MyGUI();
     }
     
 }
