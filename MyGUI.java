@@ -28,7 +28,6 @@ public class MyGUI implements ActionListener, KeyListener{
         JFrame frame = new JFrame("GUI");
         frame.setSize(new Dimension(400,400));
         frame.setLayout(new GridBagLayout());
-        frame.setVisible(true);
         GridBagConstraints pc = new GridBagConstraints();
         
         
@@ -184,6 +183,7 @@ public class MyGUI implements ActionListener, KeyListener{
 
         //make frame visible
         frame.setVisible(true);
+        sendText.addActionListener(e -> displayText());
         sendText.requestFocus();
 
     }
@@ -194,11 +194,7 @@ public class MyGUI implements ActionListener, KeyListener{
 
     public void displayText() {
 		String message = sendText.getText().trim();
-		StringBuffer buffer = new StringBuffer(message.length());
-
-
-		displayArea.append(buffer.toString() + "\n");
-
+		displayArea.append(message + "\n");
 		sendText.setText("");
 		sendText.requestFocus();
 	}
@@ -211,11 +207,7 @@ public class MyGUI implements ActionListener, KeyListener{
     public void actionPerformed(ActionEvent evt) {
 		Object source = evt.getSource();
 
-		if (source == sendButton) 
-			displayText();
-		else if (source == exitButton)
-			System.exit(0);
-        else if (source == joinButton){
+		if (source == joinButton){
             join();
         }
 	}
@@ -239,9 +231,6 @@ public class MyGUI implements ActionListener, KeyListener{
 			String host = hostField.getText();
             int port = Integer.parseInt(portField.getText());
             String username = usernameField.getText();
-			displayMessage(host);
-            displayMessage(String.valueOf(port));
-            displayMessage(username);
         
 			
 		//}
