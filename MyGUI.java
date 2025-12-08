@@ -12,7 +12,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 
-public class MyGUI {
+public class MyGUI implements ActionListener, KeyListener{
 
     private JButton sendButton;
 	private JButton exitButton;
@@ -23,7 +23,7 @@ public class MyGUI {
     private JTextField portField;
     private JTextField hostField;
 
-    public void MyGUI(){
+    public MyGUI(){
         //make a frame
         JFrame frame = new JFrame("GUI");
         frame.setSize(new Dimension(400,400));
@@ -32,7 +32,7 @@ public class MyGUI {
         GridBagConstraints pc = new GridBagConstraints();
         
         //make a message panel
-        JScrollPane messagePanel = new JScrollPane();
+        JScrollPane messagePanel = new JScrollPane(displayArea);
 
         //constraints for the panel on pc
             pc.gridx = 0;
@@ -55,8 +55,8 @@ public class MyGUI {
 		    displayArea.setEditable(false);
 		    displayArea.setFont(new Font("SansSerif", Font.PLAIN, 14));
 
-		    JScrollPane scrollPane = new JScrollPane(displayArea);
-		    messagePanel.add(scrollPane,"Center");
+		    
+		    messagePanel.add(messagePanel,"Center");
 
 
 
@@ -106,8 +106,8 @@ public class MyGUI {
                 tbpc.insets = new Insets(10,10,10,10);
                 tbpc.anchor = GridBagConstraints.NORTHWEST; 
 
-                JTextField textLine = new JTextField(20);
-                typeBarPanel.add(textLine, tbpc);
+                sendText = new JTextField(20);
+                typeBarPanel.add(sendText, tbpc);
 
 
                 
@@ -181,16 +181,11 @@ public class MyGUI {
                 jpc3.insets = new Insets(10,10,10,10);
                 joinButton = new JButton("Click here to Join");
                 joinPanel.add(joinButton,jpc3);
+                joinButton.addActionListener(this);
 
         //make frame visible
         frame.setVisible(true);
         sendText.requestFocus();
-        
-        addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent evt) {
-				System.exit(0);
-			}
-		} );
 
     }
 
@@ -235,26 +230,24 @@ public class MyGUI {
 			displayText();
 	}
 
+    public void keyReleased(KeyEvent e) { }
+
+	/** Not implemented */
+	public void keyTyped(KeyEvent e) {  }
+
     public void join(){
-        try {
+        //try {
 			String host = hostField.getText();
             int port = Integer.parseInt(portField.getText());
             String username = usernameField.getText();
+			displayMessage(host);
+            displayMessage(String.valueOf(port));
+            displayMessage(username);
+        
 			
-            Socket client = new Socket(host, port);
-			
-            win.displayMessage("My name is " + username);
-
-			Thread ReaderThread = new Thread(new ReaderThread(client, win));
-
-			ReaderThread.start();
-		}
-		catch (UnknownHostException uhe) { System.out.println(uhe); }
-		catch (IOException ioe) { System.out.println(ioe); }
+		//}
+		//catch (UnknownHostException uhe) { System.out.println(uhe); }
+		//catch (IOException ioe) { System.out.println(ioe); }
     }
     
-
-    public static void main(String[] args) {
-        MyGUI win = new MyGUI();
-	}
 }
