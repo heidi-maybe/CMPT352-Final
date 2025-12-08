@@ -6,13 +6,16 @@
  * @author Jack Brinkman & Heidi Andre 
  */
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import javax.swing.*;
 
 public class MyGUI implements ActionListener, KeyListener{
+    private String host;
+    private int port;
+    private String username;
 
     private JButton sendButton;
 	private JButton exitButton;
@@ -208,7 +211,10 @@ public class MyGUI implements ActionListener, KeyListener{
 		Object source = evt.getSource();
 
 		if (source == joinButton){
-            join();
+                    try {
+                        join();
+                    } catch (IOException ex) {
+                    }
         }
 	}
 
@@ -226,16 +232,26 @@ public class MyGUI implements ActionListener, KeyListener{
 	/** Not implemented */
 	public void keyTyped(KeyEvent e) {  }
 
-    public void join(){
-        //try {
-			String host = hostField.getText();
-            int port = Integer.parseInt(portField.getText());
-            String username = usernameField.getText();
+    public void join() throws IOException{
+        this.host = hostField.getText();
+        this.port = Integer.parseInt(portField.getText());
+        this.username = usernameField.getText();
+        serverConnection();
         
-			
-		//}
-		//catch (UnknownHostException uhe) { System.out.println(uhe); }
-		//catch (IOException ioe) { System.out.println(ioe); }
+        //}
+        //catch (UnknownHostException uhe) { System.out.println(uhe); }
+    }
+    public void serverConnection() {
+       try {
+            System.out.println("Connecting to " + this.host + ":" + this.port + " as " + this.username);
+            Socket connect = new Socket(this.host, this.port);
+            
+            Thread ReaderThread = new Thread(new ReaderThread(connect, this));
+            ReaderThread.start();
+
+        } 
+        catch (UnknownHostException uhe) { System.out.println("Unknown Host: " + uhe); }
+        catch (IOException ioe) { System.out.println("Connection I/O Error: " + ioe); }
     }
     public static void main(String[] args){
         MyGUI win = new MyGUI();
