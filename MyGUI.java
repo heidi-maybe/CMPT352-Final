@@ -26,6 +26,11 @@ public class MyGUI implements ActionListener, KeyListener{
     private JTextField usernameField;
     private JTextField portField;
     private JTextField hostField;
+    
+    
+    private InputStream in;
+    private OutputStream out;
+    private Socket connect;
 
     public MyGUI(){
         //make a frame
@@ -187,20 +192,33 @@ public class MyGUI implements ActionListener, KeyListener{
 
         //make frame visible
         frame.setVisible(true);
-        sendText.addActionListener(e -> displayText());
+        sendText.addActionListener(e -> {
+            try {
+                displayText();
+            } catch (Exception ex) {
+                System.getLogger(MyGUI.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        });
         sendText.requestFocus();
 
     }
 
     public void displayMessage(String message) {
 		displayArea.append(message + "\n");
+        System.out.println("used message");
 	}
 
-    public void displayText() {
+    public void displayText() throws Exception {
 		String message = sendText.getText().trim();
 		displayArea.append(message + "\n");
 		sendText.setText("");
 		sendText.requestFocus();
+        System.out.println("used text");
+
+        // Still needs work. For debugging for now should see a message from the running server "Recieved: MSG:....."
+        byte[] msgKVL = KLV.encodeKLV("MSG\0", message.getBytes(StandardCharsets.UTF_8));
+        out.write(msgKVL);
+        // out.flush(); tried that but I don't think it worked
 	}
 
 
@@ -225,7 +243,11 @@ public class MyGUI implements ActionListener, KeyListener{
 	 */
 	public void keyPressed(KeyEvent e) { 
 		if (e.getKeyCode() == KeyEvent.VK_ENTER)
-			displayText();
+			try {
+                            displayText();
+                } catch (Exception ex) {
+                    System.getLogger(MyGUI.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
 	}
 
     public void keyReleased(KeyEvent e) { }
@@ -245,13 +267,14 @@ public class MyGUI implements ActionListener, KeyListener{
     public void serverConnection() {
        try {
             System.out.println("Connecting to " + this.host + ":" + this.port + " as " + this.username);
-            Socket connect = new Socket(this.host, this.port);
-            InputStream in = connect.getInputStream();
-            OutputStream out = connect.getOutputStream();
+            this.connect = new Socket(this.host, this.port);
+            this.in = connect.getInputStream();
+            this.out = connect.getOutputStream();
 
             byte[] message = KLV.encodeKLV("JOIN", this.username.getBytes(StandardCharsets.UTF_8));
             out.write(message);
             
+            // Needed for reading messages being sent by the Server -> Handler -> Broadcast (path of the message I think)
             Thread ReaderThread = new Thread(new ReaderThread(connect, this));
             ReaderThread.start();
 

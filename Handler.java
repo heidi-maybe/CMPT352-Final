@@ -16,13 +16,32 @@ public class Handler {
         DataInputStream fromClient = null;
         try {
             fromClient = new DataInputStream(client.getInputStream());
+            // Needs a connection to Broadcast somehow
 
             while (true) {
                 KLV.KLVMessage message = KLV.readKLVFromSocket(fromClient);
-                    if (message == null) {
-                        break; // Connection closed
-                    }
+                if (message == null) {
+                    break; // Connection closed
+                }
+                // When a person joins the chatroom
                 if (message.key.equals("JOIN")) {
+                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Received: " + message.key + ":" + valueStr);
+                }
+                // Adding some of the KLV messages we need. Working on implementing them
+
+                // A message was sent in the chatroom (Currently working on)
+                if (message.key.equals("MSG\0")) { // \0 is NULL padding 
+                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Received: " + message.key + ":" + valueStr);
+                }
+                // A person has left the chatroom (haven't started)
+                if (message.key.equals("EXIT")) { 
+                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Received: " + message.key + ":" + valueStr);
+                }
+                // Server Response (I think this is error codes and such so this will change) (haven't started)
+                if (message.key.equals("RESP")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                 }
