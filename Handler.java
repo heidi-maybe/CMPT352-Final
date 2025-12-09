@@ -8,6 +8,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 
 public class Handler {
     
@@ -17,9 +18,13 @@ public class Handler {
             fromClient = new DataInputStream(client.getInputStream());
 
             while (true) {
-                int data = fromClient.read();
-                if (data == -1) {
-                    break;
+                KLV.KLVMessage message = KLV.readKLVFromSocket(fromClient);
+                    if (message == null) {
+                        break; // Connection closed
+                    }
+                if (message.key.equals("JOIN")) {
+                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Received: " + message.key + ":" + valueStr);
                 }
             }
             

@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import javax.swing.*;
 
 public class MyGUI implements ActionListener, KeyListener{
@@ -245,13 +246,19 @@ public class MyGUI implements ActionListener, KeyListener{
        try {
             System.out.println("Connecting to " + this.host + ":" + this.port + " as " + this.username);
             Socket connect = new Socket(this.host, this.port);
+            InputStream in = connect.getInputStream();
+            OutputStream out = connect.getOutputStream();
+
+            byte[] message = KLV.encodeKLV("JOIN", this.username.getBytes(StandardCharsets.UTF_8));
+            out.write(message);
             
             Thread ReaderThread = new Thread(new ReaderThread(connect, this));
             ReaderThread.start();
 
-        } 
+        }
         catch (UnknownHostException uhe) { System.out.println("Unknown Host: " + uhe); }
         catch (IOException ioe) { System.out.println("Connection I/O Error: " + ioe); }
+        catch (Exception e) {}
     }
     public static void main(String[] args){
         MyGUI win = new MyGUI();
