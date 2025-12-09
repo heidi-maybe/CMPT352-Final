@@ -26,7 +26,7 @@ public class Server {
     private static final List<Socket> clients = new CopyOnWriteArrayList<>();
 
     // Message queue for broadcasting thread
-    private static final Vector<String> messageQueue = new Vector<>();
+    private static final LinkedList<String> messageQueue = new LinkedList<>();
 
 
     public static void main(String[] args) throws IOException {

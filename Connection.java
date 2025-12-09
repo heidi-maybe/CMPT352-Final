@@ -15,9 +15,9 @@ public class Connection implements Runnable {
     private Socket	client;
 	private Handler handler;
 	private List<Socket> clients;
-	private Vector<String> messageQueue;
+	private LinkedList<String> messageQueue;
 	
-	public Connection(Socket client, List<Socket> clients, Vector<String> messageQueue) {
+	public Connection(Socket client, List<Socket> clients, LinkedList<String> messageQueue) {
 		this.client = client;
 		this.clients = clients;
 		this.messageQueue = messageQueue;

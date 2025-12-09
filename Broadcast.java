@@ -12,9 +12,9 @@ import java.util.*;
 
 public class Broadcast implements Runnable {
     private List<Socket> clients;
-    private Vector<String> messageQueue;
+    private LinkedList<String> messageQueue;
 
-    public Broadcast(List<Socket> clients, Vector<String> messageQueue) {
+    public Broadcast(List<Socket> clients, LinkedList<String> messageQueue) {
 		this.clients = clients;
 		this.messageQueue = messageQueue;
 	}
@@ -31,13 +31,23 @@ public class Broadcast implements Runnable {
 
             String testMessage = "[Test Message" + count + "]\n";
 
+            LinkedList<String> sending = new LinkedList<>();
+            int next = messageQueue.size();
+
+            // if count not caught up
+                // loop at count to next
+                    // adds i messageQueue to sending sending.add(messageQeueu.get(i));
+                // count to next
+            // else continue
+
             for (Socket client : clients) {
                 try {
                     DataOutputStream toClient = new DataOutputStream(client.getOutputStream());
+                    // messages in sending SEND
                     toClient.writeBytes(testMessage);
                 } catch (IOException ioe) {}
             }
-
+            // delete in a sec
             count++;
         }
     }

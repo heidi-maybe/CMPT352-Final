@@ -28,13 +28,16 @@ public class Handler {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                 }
-                // Adding some of the KLV messages we need. Working on implementing them
 
-                // A message was sent in the chatroom (Currently working on)
-                if (message.key.equals("MSG\0")) { // \0 is NULL padding 
+                // A message was sent in the chatroom 
+                if (message.key.equals("MSG")) { // \0 is NULL padding 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                 }
+
+                // Adding some of the KLV messages we need. Working on implementing them
+
+
                 // A person has left the chatroom (haven't started)
                 if (message.key.equals("EXIT")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
