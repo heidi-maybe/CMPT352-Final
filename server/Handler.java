@@ -37,10 +37,31 @@ public class Handler {
                 // When a person joins the chatroom
                 if (message.key.equals("JOIN")) {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    boolean letJoin = true;
 
-                    System.out.println("Received: " + message.key + ":" + valueStr);
-                    synchronized(this.messageQueue) {
-                        this.messageQueue.add(valueStr);
+                    for(int i = 0; i < usernames.size(); i++){
+                        String existingUserName = usernames.get(i);
+                        String existingNewName = existingUserName.substring(3);
+                        
+                        if (valueStr.equals(existingNewName)){
+                            String noJoinMessage = "Username already taken, goodbye";
+                            byte[] noJoinMessageBytes = noJoinMessage.getBytes("UTF-8");
+                            client.close();
+                            message = null;
+                            toClient.write(noJoinMessageBytes);
+                            clients.remove(client);
+                            letJoin = false;
+
+                        } 
+
+
+
+                    }
+                    if (letJoin == true){
+                        System.out.println("Received: " + message.key + ":" + valueStr);
+                        synchronized(this.messageQueue) {
+                            this.messageQueue.add(valueStr);
+                        }
                     }
                 }
 
