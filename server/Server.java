@@ -27,6 +27,7 @@ public class Server {
 
     // Message queue for broadcasting thread
     private static final LinkedList<String> messageQueue = new LinkedList<>();
+    private static final ArrayList<String> usernames = new ArrayList<String>();
 
     private static final ArrayList<String> usernames = new ArrayList<String>();
 
@@ -35,7 +36,7 @@ public class Server {
         ServerSocket sock = null;
 
         try{
-            Broadcast broadcaster = new Broadcast(clients, messageQueue);
+            Broadcast broadcaster = new Broadcast(client, clients, messageQueue, usernames);
             Thread broadcastThread = new Thread(broadcaster);
             broadcastThread.setDaemon(true);
 			broadcastThread.start();
