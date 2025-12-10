@@ -18,7 +18,6 @@ public class MyGUI implements ActionListener, KeyListener{
     private int port;
     private String username;
 
-    private JButton sendButton;
 	private JButton exitButton;
 	private JTextField sendText;
 	private JTextArea displayArea;
@@ -176,7 +175,7 @@ public class MyGUI implements ActionListener, KeyListener{
                 usernameField = new JTextField("username",20);
                 joinPanel.add(usernameField,jpc2);
 
-                //add and constrain panels to push fields closer together
+                //Join Button
                 GridBagConstraints jpc3 = new GridBagConstraints();
                 jpc3.gridx = 0;
                 jpc3.gridy = 3;
@@ -189,6 +188,21 @@ public class MyGUI implements ActionListener, KeyListener{
                 joinButton = new JButton("Click here to Join");
                 joinPanel.add(joinButton,jpc3);
                 joinButton.addActionListener(this);
+
+                //Exit Button
+                GridBagConstraints jpc4 = new GridBagConstraints();
+                jpc4.gridx = 0;
+                jpc4.gridy = 4;
+                jpc4.gridwidth = 1;
+                jpc4.fill = GridBagConstraints.HORIZONTAL;
+                jpc4.weightx = 1;
+                jpc4.weighty = 0.1;
+                jpc4.anchor = GridBagConstraints.NORTH;
+                jpc4.insets = new Insets(10,10,10,10);
+                exitButton = new JButton("Click here to Exit");
+                joinPanel.add(exitButton,jpc4);
+                exitButton.addActionListener(this);
+
 
         //make frame visible
         frame.setVisible(true);
@@ -235,6 +249,9 @@ public class MyGUI implements ActionListener, KeyListener{
                     } catch (IOException ex) {
                     }
         }
+        if (source == exitButton){
+            exit();
+        }
 	}
 
     /**
@@ -263,6 +280,13 @@ public class MyGUI implements ActionListener, KeyListener{
         
         //}
         //catch (UnknownHostException uhe) { System.out.println(uhe); }
+    }
+
+    public void exit(){
+        System.out.println("exit");
+
+
+        
     }
     public void serverConnection() {
        try {
