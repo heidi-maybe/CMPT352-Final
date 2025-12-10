@@ -28,8 +28,8 @@ public class Handler {
         try {
             fromClient = new DataInputStream(client.getInputStream());
             toClient = new DataOutputStream(client.getOutputStream());
-
-            while (true) {
+            boolean x = true;
+            while (x = true) {
                 KLV.KLVMessage message = KLV.readKLVFromSocket(fromClient);
                 if (message == null) {
                     break; // Connection closed
@@ -41,26 +41,29 @@ public class Handler {
 
                     for(int i = 0; i < usernames.size(); i++){
                         String existingUserName = usernames.get(i);
-                        String existingNewName = existingUserName.substring(3);
-                        
-                        if (valueStr.equals(existingNewName)){
+                        System.out.println("Made it to acceptance decision");
+                        if (valueStr.equals(existingUserName)){
                             String noJoinMessage = "Username already taken, goodbye";
                             byte[] noJoinMessageBytes = noJoinMessage.getBytes("UTF-8");
-                            client.close();
-                            message = null;
                             toClient.write(noJoinMessageBytes);
+                            fromClient.close();
+                            toClient.close();
+                            client.close();
                             clients.remove(client);
                             letJoin = false;
+                            System.out.println("Do not allow");
+                            x = false;
+                            message.key.equals("Exit");
 
                         } 
 
-
-
                     }
                     if (letJoin == true){
+                        System.out.println("Allowed");
                         System.out.println("Received: " + message.key + ":" + valueStr);
                         synchronized(this.messageQueue) {
                             this.messageQueue.add(valueStr);
+                            usernames.add(valueStr);
                         }
                     }
                 }
