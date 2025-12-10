@@ -37,7 +37,7 @@ public class Broadcast implements Runnable {
 
             if (count < next) {
                 for (int i = count; count < next; i++) {
-                    sending.add(messageQueue.get(i-1));
+                    sending.add(messageQueue.get(i));
                 }
                 count = next;
             } else {
