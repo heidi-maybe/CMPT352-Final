@@ -33,7 +33,11 @@ public class Handler {
                 // When a person joins the chatroom
                 if (message.key.equals("JOIN")) {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    valueStr = valueStr + " has joined";
                     System.out.println("Received: " + message.key + ":" + valueStr);
+                    synchronized(this.messageQueue) {
+                        this.messageQueue.add(valueStr);
+                    }
                 }
 
                 // A message was sent in the chatroom 
@@ -41,7 +45,7 @@ public class Handler {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                     synchronized(this.messageQueue) {
-                        this.messageQueue.add(message.key + valueStr);
+                        this.messageQueue.add(valueStr);
                     }
                 }
 
@@ -60,10 +64,6 @@ public class Handler {
                 }
             }
             
-        } catch (IOException ioe) {
-        } finally {
-            if (fromClient != null)
-            fromClient.close();
-        }
+        } catch (IOException ioe) {} 
     }
 }

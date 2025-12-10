@@ -223,11 +223,12 @@ public class MyGUI implements ActionListener, KeyListener{
 	}
 
     public void displayText() throws Exception {
-		String message = sendText.getText().trim();
+		String message = this.username+ ": " + sendText.getText().trim();
 		// displayArea.append(message + "\n");
 		sendText.setText("");
 		sendText.requestFocus();
         System.out.println("used text");
+
 
         // Still needs work. For debugging for now should see a message from the running server "Recieved: MSG:....."
         byte[] msgKVL = KLV.encodeKLV("MSG\0", message.getBytes(StandardCharsets.UTF_8));
