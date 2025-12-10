@@ -22,12 +22,11 @@ public class Connection implements Runnable {
 		this.client = client;
 		this.clients = clients;
 		this.messageQueue = messageQueue;
+		this.usernames = usernames;
 
 		this.usernames = usernames;
 		this.handler = new Handler(clients, messageQueue, usernames);
 		
-
-		this.handler = new Handler(clients, messageQueue);
 	
 	}
 
@@ -38,8 +37,6 @@ public class Connection implements Runnable {
 		try {
 
 			handler.process(client, clients, usernames);
-
-			handler.process(clients,messageQueue);
 
 		}
 		catch (java.io.IOException ioe) {

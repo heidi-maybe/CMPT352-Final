@@ -24,9 +24,11 @@ public class Handler {
     public void process(Socket client, List<Socket> clients, ArrayList<String> usernames) throws java.io.IOException {
         DataInputStream fromClient = null;
         DataOutputStream toClient = null;
+        this.usernames = usernames;
         
         try {
             fromClient = new DataInputStream(client.getInputStream());
+            toClient = new DataOutputStream(client.getOutputStream());
 
             while (true) {
                 KLV.KLVMessage message = KLV.readKLVFromSocket(fromClient);
@@ -36,6 +38,19 @@ public class Handler {
                 // When a person joins the chatroom
                 if (message.key.equals("JOIN")) {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    for (int i = 0; i < this.usernames.size(); i ++){
+                        String username = this.usernames.get(i);
+                        if (valueStr.equals(username)){
+                            
+                            String noJoin = "This username is already taken";
+                            byte[] noJoinbyteArray = noJoin.getBytes("UTF-8");
+                            toClient.write(noJoinbyteArray);
+                            
+                            message = null;
+                            break;
+
+                        }
+                    }
                     valueStr = valueStr + " has joined";
                     System.out.println("Received: " + message.key + ":" + valueStr);
                     synchronized(this.messageQueue) {
