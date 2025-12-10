@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class MyGUI implements ActionListener, KeyListener{
@@ -26,6 +27,7 @@ public class MyGUI implements ActionListener, KeyListener{
     private JTextField usernameField;
     private JTextField portField;
     private JTextField hostField;
+    private ArrayList<String> myStringList = new ArrayList<>();
     
     
     private InputStream in;

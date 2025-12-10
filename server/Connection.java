@@ -16,12 +16,15 @@ public class Connection implements Runnable {
 	private Handler handler;
 	private List<Socket> clients;
 	private LinkedList<String> messageQueue;
+	private ArrayList<String> usernames;
 	
-	public Connection(Socket client, List<Socket> clients, LinkedList<String> messageQueue) {
+	public Connection(Socket client, List<Socket> clients, LinkedList<String> messageQueue, ArrayList<String> usernames) {
 		this.client = client;
 		this.clients = clients;
 		this.messageQueue = messageQueue;
 		this.handler = new Handler(clients, messageQueue);
+		this.usernames = usernames;
+
 	}
 
     /**
@@ -29,7 +32,7 @@ public class Connection implements Runnable {
      */	
 	public void run() { 
 		try {
-			handler.process(client);
+			handler.process(clients,messageQueue, usernames);
 		}
 		catch (java.io.IOException ioe) {
 			System.err.println(ioe);

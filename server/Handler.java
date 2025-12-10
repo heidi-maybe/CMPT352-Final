@@ -19,7 +19,7 @@ public class Handler {
         this.clients = users;
     }
     
-    public void process(Socket client) throws java.io.IOException {
+    public void process(Socket client, ArrayList<String> usernames) throws java.io.IOException {
         DataInputStream fromClient = null;
         
         try {
@@ -44,6 +44,7 @@ public class Handler {
                 if (message.key.equals("MSG")) { // \0 is NULL padding and striped in the encorder so doesn't matter here (cries)
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
+                    
                     synchronized(this.messageQueue) {
                         this.messageQueue.add(valueStr);
                     }

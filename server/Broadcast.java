@@ -13,10 +13,12 @@ import java.util.*;
 public class Broadcast implements Runnable {
     private List<Socket> clients;
     private LinkedList<String> messageQueue;
+    private ArrayList<String> usernames;
 
-    public Broadcast(List<Socket> clients, LinkedList<String> messageQueue) {
+    public Broadcast(List<Socket> clients, LinkedList<String> messageQueue,  ArrayList<String> usernames){
 		this.clients = clients;
 		this.messageQueue = messageQueue;
+        this.usernames = usernames;
 	}
 
     public void run() {
