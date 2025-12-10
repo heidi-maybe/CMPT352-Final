@@ -247,7 +247,12 @@ public class MyGUI implements ActionListener, KeyListener{
 
 
         // Still needs work. For debugging for now should see a message from the running server "Recieved: MSG:....."
-        byte[] msgKVL = KLV.encodeKLV("MSG\0", message.getBytes(StandardCharsets.UTF_8));
+        KLV.KLVMessage from = new KLV.KLVMessage("FROM", this.username.getBytes(StandardCharsets.UTF_8));
+        KLV.KLVMessage body = new KLV.KLVMessage("BODY", message.getBytes(StandardCharsets.UTF_8));
+        java.util.List<KLV.KLVMessage> messageComp = new java.util.ArrayList<KLV.KLVMessage>();
+        messageComp.add(from);
+        messageComp.add(body);
+        byte[] msgKVL = KLV.encodeNestedKLV("MSG\0", messageComp);
         out.write(msgKVL);
         
 	}
