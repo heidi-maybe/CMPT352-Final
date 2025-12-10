@@ -21,6 +21,7 @@ public class Broadcast implements Runnable {
 
     public void run() {
         int count = 0;
+        int testCount = 0;
 
         while (true) {
             
@@ -36,7 +37,7 @@ public class Broadcast implements Runnable {
             int next = messageQueue.size();
 
             if (count < next) {
-                for (int i = count; count < next; i++) {
+                for (int i = count; i < next; i++) {
                     sending.add(messageQueue.get(i));
                 }
                 count = next;
@@ -52,15 +53,21 @@ public class Broadcast implements Runnable {
             for (Socket client : clients) {
                 try {
                     DataOutputStream toClient = new DataOutputStream(client.getOutputStream());
+                    
                     // messages in sending SEND
                     for (String send : sending) {
-                        toClient.writeBytes(send);
+                        System.out.print(client);
+                        System.out.println(send);
+                        toClient.writeBytes(testMessage);
+                        
+                        toClient.writeBytes(send + "\n");
+                        toClient.flush();
                     }
                     
-                } catch (IOException ioe) {}
+                } catch (IOException ioe) {System.out.println(ioe);}
             }
             // delete in a sec
-            //count++;
+            testCount++;
         }
     }
 }
