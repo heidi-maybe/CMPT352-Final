@@ -34,15 +34,16 @@ public class Broadcast implements Runnable {
             String testMessage = "[Test Message" + count + "]\n";
 
             LinkedList<String> sending = new LinkedList<>();
-            int next = messageQueue.size();
-
-            if (count < next) {
-                for (int i = count; i < next; i++) {
-                    sending.add(messageQueue.get(i));
+            synchronized(messageQueue) {
+                int next = messageQueue.size();
+                if (count < next) {
+                    for (int i = count; i < next; i++) {
+                        sending.add(messageQueue.get(i));
+                    }
+                    count = next;
+                } else {
+                    continue;
                 }
-                count = next;
-            } else {
-                continue;
             }
             // if count not caught up
                 // loop at count to next

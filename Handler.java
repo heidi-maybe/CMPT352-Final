@@ -24,7 +24,6 @@ public class Handler {
         
         try {
             fromClient = new DataInputStream(client.getInputStream());
-            // Needs a connection to Broadcast somehow
 
             while (true) {
                 KLV.KLVMessage message = KLV.readKLVFromSocket(fromClient);
@@ -41,7 +40,9 @@ public class Handler {
                 if (message.key.equals("MSG")) { // \0 is NULL padding and striped in the encorder so doesn't matter here (cries)
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
-                    this.messageQueue.add(message.key + valueStr);
+                    synchronized(this.messageQueue) {
+                        this.messageQueue.add(message.key + valueStr);
+                    }
                 }
 
                 // Adding some of the KLV messages we need. Working on implementing them
