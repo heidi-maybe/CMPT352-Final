@@ -43,7 +43,7 @@ public class Handler {
                         String existingUserName = usernames.get(i);
                         System.out.println("Made it to acceptance decision");
                         if (valueStr.equals(existingUserName)){
-                            String noJoinMessage = "Username already taken, goodbye";
+                            String noJoinMessage = "Username already taken, goodbye\n";
                             byte[] noJoinMessageBytes = noJoinMessage.getBytes("UTF-8");
                             toClient.write(noJoinMessageBytes);
                             fromClient.close();

@@ -34,7 +34,10 @@ public class ReaderThread implements Runnable
 				final String msg = message;
 				SwingUtilities.invokeLater(new Runnable() {
 					public void run() {
-						screen.displayMessage(msg);
+						if (!msg.equals(null)) {
+							screen.displayMessage(msg);
+						}
+						
 					}
 				});
 			}
