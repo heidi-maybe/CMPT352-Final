@@ -56,6 +56,7 @@ public class Handler {
                 if (message.key.equals("EXIT")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
+                    
                 }
                 // Server Response (I think this is error codes and such so this will change) (haven't started)
                 if (message.key.equals("RESP")) { 

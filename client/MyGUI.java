@@ -251,7 +251,11 @@ public class MyGUI implements ActionListener, KeyListener{
                     }
         }
         if (source == exitButton){
-            exit();
+                    try {
+                        exit();
+                    } catch (Exception ex) {
+                        System.getLogger(MyGUI.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
         }
 	}
 
@@ -283,10 +287,10 @@ public class MyGUI implements ActionListener, KeyListener{
         //catch (UnknownHostException uhe) { System.out.println(uhe); }
     }
 
-    public void exit(){
+    public void exit() throws Exception{
         System.out.println("exit");
-
-
+        byte[] message = KLV.encodeKLV("EXIT", this.username.getBytes(StandardCharsets.UTF_8));
+        out.write(message);
         
     }
     public void serverConnection() {
