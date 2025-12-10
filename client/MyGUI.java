@@ -242,10 +242,10 @@ public class MyGUI implements ActionListener, KeyListener{
 		sendText.setText("");
 		sendText.requestFocus();
         System.out.println("used text");
-
-
+        
         // Still needs work. For debugging for now should see a message from the running server "Recieved: MSG:....."
         byte[] msgKVL = KLV.encodeKLV("MSG\0", message.getBytes(StandardCharsets.UTF_8));
+        System.out.println(msgKVL);
         out.write(msgKVL);
         
 	}
