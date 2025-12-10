@@ -21,7 +21,7 @@ public class Broadcast implements Runnable {
 
     public void run() {
         int count = 0;
-        int testCount = 0;
+        // int testCount = 0;
 
         while (true) {
             
@@ -31,7 +31,7 @@ public class Broadcast implements Runnable {
             } catch (InterruptedException ignore) {}
 
             // broadcast debugging
-            String testMessage = "[Test Message" + count + "]\n";
+            // String testMessage = "[Test Message" + count + "]\n";
 
             LinkedList<String> sending = new LinkedList<>();
             synchronized(messageQueue) {
@@ -59,7 +59,7 @@ public class Broadcast implements Runnable {
                     for (String send : sending) {
                         System.out.print(client);
                         System.out.println(send);
-                        toClient.writeBytes(testMessage);
+                        // toClient.writeBytes(testMessage);
                         
                         toClient.writeBytes(send + "\n");
                         toClient.flush();
@@ -68,7 +68,7 @@ public class Broadcast implements Runnable {
                 } catch (IOException ioe) {System.out.println(ioe);}
             }
             // delete in a sec
-            testCount++;
+            // testCount++;
         }
     }
 }
