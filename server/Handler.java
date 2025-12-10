@@ -23,8 +23,6 @@ public class Handler {
     
     public void process(Socket client, List<Socket> clients, ArrayList<String> usernames) throws java.io.IOException {
         DataInputStream fromClient = null;
-        DataOutputStream toClient = null;
-        this.usernames = usernames;
         
         try {
             fromClient = new DataInputStream(client.getInputStream());
@@ -38,20 +36,7 @@ public class Handler {
                 // When a person joins the chatroom
                 if (message.key.equals("JOIN")) {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
-                    for (int i = 0; i < this.usernames.size(); i ++){
-                        String username = this.usernames.get(i);
-                        if (valueStr.equals(username)){
-                            
-                            String noJoin = "This username is already taken";
-                            byte[] noJoinbyteArray = noJoin.getBytes("UTF-8");
-                            toClient.write(noJoinbyteArray);
-                            
-                            message = null;
-                            break;
 
-                        }
-                    }
-                    valueStr = valueStr + " has joined";
                     System.out.println("Received: " + message.key + ":" + valueStr);
                     synchronized(this.messageQueue) {
                         this.messageQueue.add(valueStr);
@@ -73,13 +58,30 @@ public class Handler {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                     // needs to be to just the one client who clicked READ. not sure yet
+                    toClient.writeBytes("------Chat History Requested------\n");
+                    int full = this.messageQueue.size();
+                    int history;
+                    if (full >= 20) {
+                        history = this.messageQueue.size() - 20;
+                    } else {
+                        history = 0;
+                    }
+                    if (full != 0) {
+                        for (int i = history; i < full; i++) {
+                            toClient.writeBytes(this.messageQueue.get(i) + "\n");
+                            toClient.flush();
+                        }
+                    } else {
+                        toClient.writeBytes("No Chat History\n");
+                    }
+                    
                 }
 
                 // A person has left the chatroom
                 if (message.key.equals("EXIT")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
-                    valueStr = "Goodbye " + valueStr;
+                    valueStr = "------Goodbye " + valueStr + "------";
                     synchronized(this.messageQueue) {
                         this.messageQueue.add(valueStr);
                     }
