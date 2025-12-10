@@ -36,25 +36,11 @@ public class Handler {
                 // When a person joins the chatroom
                 if (message.key.equals("JOIN")) {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
-                    System.out.println("Made it to JOIN");
-                    for(int i = 0; i < usernames.size(); i++){
-                        if (usernames.get(i).equals(valueStr)){
-                            toClient = new DataOutputStream(client.getOutputStream());
-                            String returnMessage = "Invalid Username";
-                            byte[] byteArray = returnMessage.getBytes();
-                            toClient.write(byteArray);
-                            fromClient.close();
-                            toClient.close();
-                            clients.remove(client);
-                            System.out.println("Not Valid Username");
-                            
-                        } 
-                        
-                        
-                    }
-                    System.out.println("Valid Username");
-                    usernames.add(valueStr);
+                    valueStr = valueStr + " has joined";
                     System.out.println("Received: " + message.key + ":" + valueStr);
+                    synchronized(this.messageQueue) {
+                        this.messageQueue.add(valueStr);
+                    }
                 }
 
                 // A message was sent in the chatroom 
@@ -62,18 +48,29 @@ public class Handler {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                     synchronized(this.messageQueue) {
-                        this.messageQueue.add(message.key + valueStr);
+                        this.messageQueue.add(valueStr);
+                    }
+                }
+
+                // Last 20 messages in chat history
+
+                if (message.key.equals("READ")) { 
+                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Received: " + message.key + ":" + valueStr);
+                    // needs to be to just the one client who clicked READ. not sure yet
+                }
+
+                // A person has left the chatroom
+                if (message.key.equals("EXIT")) { 
+                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Received: " + message.key + ":" + valueStr);
+                    valueStr = "Goodbye " + valueStr;
+                    synchronized(this.messageQueue) {
+                        this.messageQueue.add(valueStr);
                     }
                 }
 
                 // Adding some of the KLV messages we need. Working on implementing them
-
-
-                // A person has left the chatroom (haven't started)
-                if (message.key.equals("EXIT")) { 
-                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
-                    System.out.println("Received: " + message.key + ":" + valueStr);
-                }
                 // Server Response (I think this is error codes and such so this will change) (haven't started)
                 if (message.key.equals("RESP")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
@@ -81,10 +78,6 @@ public class Handler {
                 }
             }
             
-        } catch (IOException ioe) {
-        } finally {
-            if (fromClient != null)
-            fromClient.close();
-        }
+        } catch (IOException ioe) {} 
     }
 }
