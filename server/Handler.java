@@ -23,6 +23,7 @@ public class Handler {
     
     public void process(Socket client, List<Socket> clients, ArrayList<String> usernames) throws java.io.IOException {
         DataInputStream fromClient = null;
+        DataOutputStream toClient = null;
         
         try {
             fromClient = new DataInputStream(client.getInputStream());
