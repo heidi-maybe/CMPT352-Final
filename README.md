@@ -31,4 +31,7 @@ and
 Fill in the prompt boxes accordingly and press join button to connect to Server.
 
 ## Known Issues and Limitations
+KLV is not properly implemented to make and parse messages correctly. Currently our clients work with our server and can connect to other servers. However since KLV is not implemented correctly our messages cannot be parsed by other servers properly following KLV. Meaning other servers can see our connection and exit but they cannot see messages that we send and we cannot see messages they send. 
+
+Currently there is still the problem that multiple users can join the server with the same user name. 
 
