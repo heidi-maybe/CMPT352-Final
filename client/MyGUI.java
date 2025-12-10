@@ -19,6 +19,7 @@ public class MyGUI implements ActionListener, KeyListener{
     private String username;
 
 	private JButton exitButton;
+    private JButton readButton;
 	private JTextField sendText;
 	private JTextArea displayArea;
     private JButton joinButton;
@@ -146,7 +147,7 @@ public class MyGUI implements ActionListener, KeyListener{
                 jpc.weighty = 0.1;
                 jpc.anchor = GridBagConstraints.NORTH;
                 jpc.insets = new Insets(10,10,10,10);
-                hostField = new JTextField("host",20);
+                hostField = new JTextField("localhost",20);
                 joinPanel.add(hostField,jpc);
 
                 //add and contrain the port text box on the join panel
@@ -159,7 +160,7 @@ public class MyGUI implements ActionListener, KeyListener{
                 jpc1.weighty = 0.1;
                 jpc1.anchor = GridBagConstraints.NORTH;
                 jpc1.insets = new Insets(0,10,0,10);
-                portField = new JTextField("port",20);
+                portField = new JTextField("8080",20);
                 joinPanel.add(portField,jpc1);
 
                 //add and contrain the username text box on the join panel
@@ -192,7 +193,7 @@ public class MyGUI implements ActionListener, KeyListener{
                 //Exit Button
                 GridBagConstraints jpc4 = new GridBagConstraints();
                 jpc4.gridx = 0;
-                jpc4.gridy = 4;
+                jpc4.gridy = 5;
                 jpc4.gridwidth = 1;
                 jpc4.fill = GridBagConstraints.HORIZONTAL;
                 jpc4.weightx = 1;
@@ -202,6 +203,19 @@ public class MyGUI implements ActionListener, KeyListener{
                 exitButton = new JButton("Click here to Exit");
                 joinPanel.add(exitButton,jpc4);
                 exitButton.addActionListener(this);
+
+                GridBagConstraints jpc5 = new GridBagConstraints();
+                jpc5.gridx = 0;
+                jpc5.gridy = 4;
+                jpc5.gridwidth = 1;
+                jpc5.fill = GridBagConstraints.HORIZONTAL;
+                jpc5.weightx = 1;
+                jpc5.weighty = 0.1;
+                jpc5.anchor = GridBagConstraints.NORTH;
+                jpc5.insets = new Insets(10,10,10,10);
+                readButton = new JButton("Click here to READ");
+                joinPanel.add(readButton,jpc5);
+                readButton.addActionListener(this);
 
 
         //make frame visible
@@ -257,6 +271,13 @@ public class MyGUI implements ActionListener, KeyListener{
                         System.getLogger(MyGUI.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                     }
         }
+        if (source == readButton) {
+                    try {
+                        read();
+                    } catch (Exception ex) {
+                        System.getLogger(MyGUI.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+        }
 	}
 
     /**
@@ -290,9 +311,20 @@ public class MyGUI implements ActionListener, KeyListener{
     public void exit() throws Exception{
         System.out.println("exit");
         byte[] message = KLV.encodeKLV("EXIT", this.username.getBytes(StandardCharsets.UTF_8));
-        out.write(message);
-        
+        this.out.write(message); 
+
+        this.out.close();
+        this.in.close();
+        displayArea.setText("You have EXITED the chatroom");
     }
+
+    public void read() throws Exception {
+        System.out.println("READ");
+        byte[] message = KLV.encodeKLV("READ", this.username.getBytes(StandardCharsets.UTF_8));
+        this.out.write(message); 
+    }
+
+
     public void serverConnection() {
        try {
             System.out.println("Connecting to " + this.host + ":" + this.port + " as " + this.username);
@@ -301,7 +333,7 @@ public class MyGUI implements ActionListener, KeyListener{
             this.out = connect.getOutputStream();
 
             byte[] message = KLV.encodeKLV("JOIN", this.username.getBytes(StandardCharsets.UTF_8));
-            out.write(message);
+            this.out.write(message);
             
             // Needed for reading messages being sent by the Server -> Handler -> Broadcast (path of the message I think)
             Thread ReaderThread = new Thread(new ReaderThread(connect, this));

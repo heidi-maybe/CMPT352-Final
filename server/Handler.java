@@ -49,15 +49,25 @@ public class Handler {
                     }
                 }
 
-                // Adding some of the KLV messages we need. Working on implementing them
+                // Last 20 messages in chat history
 
+                if (message.key.equals("READ")) { 
+                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Received: " + message.key + ":" + valueStr);
+                    // needs to be to just the one client who clicked READ. not sure yet
+                }
 
-                // A person has left the chatroom (haven't started)
+                // A person has left the chatroom
                 if (message.key.equals("EXIT")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
-                    
+                    valueStr = "Goodbye " + valueStr;
+                    synchronized(this.messageQueue) {
+                        this.messageQueue.add(valueStr);
+                    }
                 }
+
+                // Adding some of the KLV messages we need. Working on implementing them
                 // Server Response (I think this is error codes and such so this will change) (haven't started)
                 if (message.key.equals("RESP")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
