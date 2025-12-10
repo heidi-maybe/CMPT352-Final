@@ -29,11 +29,20 @@ public class Broadcast implements Runnable {
                 Thread.sleep(5000);
             } catch (InterruptedException ignore) {}
 
+            // broadcast debugging
             String testMessage = "[Test Message" + count + "]\n";
 
             LinkedList<String> sending = new LinkedList<>();
             int next = messageQueue.size();
 
+            if (count < next) {
+                for (int i = count; count < next; i++) {
+                    sending.add(messageQueue.get(i-1));
+                }
+                count = next;
+            } else {
+                continue;
+            }
             // if count not caught up
                 // loop at count to next
                     // adds i messageQueue to sending sending.add(messageQeueu.get(i));
@@ -44,11 +53,14 @@ public class Broadcast implements Runnable {
                 try {
                     DataOutputStream toClient = new DataOutputStream(client.getOutputStream());
                     // messages in sending SEND
-                    toClient.writeBytes(testMessage);
+                    for (String send : sending) {
+                        toClient.writeBytes(send);
+                    }
+                    
                 } catch (IOException ioe) {}
             }
             // delete in a sec
-            count++;
+            //count++;
         }
     }
 }

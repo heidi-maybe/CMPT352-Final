@@ -21,7 +21,7 @@ public class Connection implements Runnable {
 		this.client = client;
 		this.clients = clients;
 		this.messageQueue = messageQueue;
-		this.handler = new Handler();
+		this.handler = new Handler(clients, messageQueue);
 	}
 
     /**
