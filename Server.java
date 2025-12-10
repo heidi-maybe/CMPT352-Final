@@ -28,6 +28,8 @@ public class Server {
     // Message queue for broadcasting thread
     private static final LinkedList<String> messageQueue = new LinkedList<>();
 
+    private static final ArrayList<String> usernames = new ArrayList<String>();
+
 
     public static void main(String[] args) throws IOException {
         ServerSocket sock = null;
@@ -44,8 +46,8 @@ public class Server {
             while(true){
                 //listen for new connections and service them in a separate thread
                 Socket client = sock.accept();
-				clients.add(client);
-				Runnable task = new Connection(client, clients, messageQueue);
+                clients.add((client));
+				Runnable task = new Connection(client, clients, messageQueue, usernames);
 				exec.execute(task);
 
 

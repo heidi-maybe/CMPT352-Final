@@ -14,13 +14,16 @@ import java.util.*;
 public class Handler {
     private LinkedList<String> messageQueue;
     private List<Socket> clients;
-    public Handler(List<Socket> users, LinkedList<String> incoming) {
+    private ArrayList<String> usernames;
+    public Handler(List<Socket> users, LinkedList<String> incoming, ArrayList<String> usernames) {
         this.messageQueue = incoming;
         this.clients = users;
+        this.usernames = usernames;
     }
     
-    public void process(Socket client) throws java.io.IOException {
+    public void process(Socket client, List<Socket> clients, ArrayList<String> usernames) throws java.io.IOException {
         DataInputStream fromClient = null;
+        DataOutputStream toClient = null;
         
         try {
             fromClient = new DataInputStream(client.getInputStream());
@@ -33,6 +36,24 @@ public class Handler {
                 // When a person joins the chatroom
                 if (message.key.equals("JOIN")) {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println("Made it to JOIN");
+                    for(int i = 0; i < usernames.size(); i++){
+                        if (usernames.get(i).equals(valueStr)){
+                            toClient = new DataOutputStream(client.getOutputStream());
+                            String returnMessage = "Invalid Username";
+                            byte[] byteArray = returnMessage.getBytes();
+                            toClient.write(byteArray);
+                            fromClient.close();
+                            toClient.close();
+                            clients.remove(client);
+                            System.out.println("Not Valid Username");
+                            
+                        } 
+                        
+                        
+                    }
+                    System.out.println("Valid Username");
+                    usernames.add(valueStr);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                 }
 
