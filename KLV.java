@@ -32,6 +32,10 @@ public class KLV {
             return String.format("%s:%d:%s", key, value.length,
                 new String(value, StandardCharsets.UTF_8));
         }
+
+        public byte[] toKLV() throws Exception {
+            return encodeKLV(key, value);
+        }
     }
 
     /**
