@@ -200,14 +200,14 @@ public class KLV {
      * @param data Binary data containing nested KLV structure
      * @return List of nested KLV messages
      */
-    public static List<KLVMessage> decodeNestedKLV(byte[] data) throws Exception {
+    public static List<KLVMessage> decodeNestedKLV(KLVMessage data) throws Exception {
         // Decode outer structure
-        KLVMessage outer = decodeKLV(data);
+        // KLVMessage outer = decodeKLV(data);
 
         // Parse nested items from the value
         List<KLVMessage> nestedItems = new ArrayList<>();
         int offset = 0;
-        byte[] innerData = outer.value;
+        byte[] innerData = data.value;
 
         while (offset + 8 <= innerData.length) {
             try {
@@ -375,13 +375,13 @@ public class KLV {
         hexDump(dataMsg, "Complete DATA:33:NAME:5:alice:INFO:12:test message");
 
         // Decode the nested structure
-        System.out.println("\nDecoding nested structure:");
-        List<KLVMessage> nestedItems = decodeNestedKLV(dataMsg);
-        System.out.println("  Outer key: DATA");
-        for (KLVMessage item : nestedItems) {
-            System.out.println("    " + item.key + ": " +
-                new String(item.value, StandardCharsets.UTF_8));
-        }
+        // System.out.println("\nDecoding nested structure:");
+        // List<KLVMessage> nestedItems = decodeNestedKLV(dataMsg);
+        // System.out.println("  Outer key: DATA");
+        // for (KLVMessage item : nestedItems) {
+        //     System.out.println("    " + item.key + ": " +
+        //         new String(item.value, StandardCharsets.UTF_8));
+        // }
 
         // Example 5: Multiple KLV structures in sequence
         System.out.println("\n\n[Example 5] Parsing Multiple KLV Structures in Sequence");

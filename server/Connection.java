@@ -41,7 +41,9 @@ public class Connection implements Runnable {
 		}
 		catch (java.io.IOException ioe) {
 			System.err.println(ioe);
-		} finally {
+		} catch (Exception ex) {
+            System.getLogger(Connection.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } finally {
 			clients.remove(client);
 			
 			try {

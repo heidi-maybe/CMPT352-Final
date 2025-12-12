@@ -21,7 +21,7 @@ public class Handler {
         this.usernames = usernames;
     }
     
-    public void process(Socket client, List<Socket> clients, ArrayList<String> usernames) throws java.io.IOException {
+    public void process(Socket client, List<Socket> clients, ArrayList<String> usernames) throws java.io.IOException, Exception {
         DataInputStream fromClient = null;
         DataOutputStream toClient = null;
         
@@ -73,8 +73,22 @@ public class Handler {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println(message.value.length);
                     System.out.println("Received: " + message.key + ":" + valueStr);
+
+                    String profile = "";
+                    String content = "";
+
+                    List<KLV.KLVMessage> inside = KLV.decodeNestedKLV(message);
+                    for (KLV.KLVMessage sent : inside) {
+                        if (sent.key.equals("FROM")) {
+                            profile = new String(sent.value, StandardCharsets.UTF_8);
+                        } else if (sent.key.equals("BODY")) {
+                            content = new String(sent.value, StandardCharsets.UTF_8);
+                        }
+                    }
+
+                    String full = profile + ": " + content;
                     synchronized(this.messageQueue) {
-                        this.messageQueue.add(valueStr);
+                        this.messageQueue.add(full);
                     }
                 }
 

@@ -248,7 +248,9 @@ public class MyGUI implements ActionListener, KeyListener{
 
 
         // Still needs work. For debugging for now should see a message from the running server "Recieved: MSG:....."
-        // MSG
+        // MSG is key for the whole thing
+        // FROM is key for username
+        // BODY is key for actual message 
         KLV.KLVMessage from = new KLV.KLVMessage("FROM", this.username.getBytes(StandardCharsets.UTF_8));
         KLV.KLVMessage body = new KLV.KLVMessage("BODY", message.getBytes(StandardCharsets.UTF_8));
         java.util.List<KLV.KLVMessage> messageComp = new java.util.ArrayList<>();
