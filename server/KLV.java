@@ -13,6 +13,14 @@ import java.util.List;
  * part of your chat protocol. You must apply these concepts to implement
  * JOIN, MSG, READ, EXIT yourself!
  */
+
+/**
+ * CMPT 352 Fall 2025
+ * Final Project - Chat Room
+ *      Using base KLV file for encoding properities and other functionality.
+ *
+ * @author Jack Brinkman & Heidi Andre 
+ */
 public class KLV {
 
     /**

@@ -27,7 +27,9 @@ public class Server {
 
     // Message queue for broadcasting thread
     private static final LinkedList<String> messageQueue = new LinkedList<>();
-    private static final ArrayList<String> usernames = new ArrayList<String>();
+    
+    // List of all active users usernames in the Chatroom
+    private static final ArrayList<String> usernames = new ArrayList<>();
 
 
     public static void main(String[] args) throws IOException {

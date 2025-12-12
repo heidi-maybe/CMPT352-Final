@@ -71,6 +71,7 @@ public class Handler {
                 // A message was sent in the chatroom 
                 if (message.key.equals("MSG")) { // \0 is NULL padding and striped in the encorder so doesn't matter here (cries)
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    System.out.println(message.value.length);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                     synchronized(this.messageQueue) {
                         this.messageQueue.add(valueStr);

@@ -47,17 +47,11 @@ public class Broadcast implements Runnable {
                     continue;
                 }
             }
-            // if count not caught up
-                // loop at count to next
-                    // adds i messageQueue to sending sending.add(messageQeueu.get(i));
-                // count to next
-            // else continue
 
             for (Socket client : clients) {
                 try {
                     DataOutputStream toClient = new DataOutputStream(client.getOutputStream());
                     
-                    // messages in sending SEND
                     for (String send : sending) {
                         System.out.print(client);
                         System.out.println(send);

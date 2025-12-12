@@ -206,6 +206,7 @@ public class MyGUI implements ActionListener, KeyListener{
                 joinPanel.add(exitButton,jpc4);
                 exitButton.addActionListener(this);
 
+                // Read Button
                 GridBagConstraints jpc5 = new GridBagConstraints();
                 jpc5.gridx = 0;
                 jpc5.gridy = 4;
@@ -239,7 +240,7 @@ public class MyGUI implements ActionListener, KeyListener{
 	}
 
     public void displayText() throws Exception {
-		String message = this.username+ ": " + sendText.getText().trim();
+		String message = sendText.getText().trim();
 		// displayArea.append(message + "\n");
 		sendText.setText("");
 		sendText.requestFocus();
@@ -247,9 +248,10 @@ public class MyGUI implements ActionListener, KeyListener{
 
 
         // Still needs work. For debugging for now should see a message from the running server "Recieved: MSG:....."
+        // MSG
         KLV.KLVMessage from = new KLV.KLVMessage("FROM", this.username.getBytes(StandardCharsets.UTF_8));
         KLV.KLVMessage body = new KLV.KLVMessage("BODY", message.getBytes(StandardCharsets.UTF_8));
-        java.util.List<KLV.KLVMessage> messageComp = new java.util.ArrayList<KLV.KLVMessage>();
+        java.util.List<KLV.KLVMessage> messageComp = new java.util.ArrayList<>();
         messageComp.add(from);
         messageComp.add(body);
         byte[] msgKVL = KLV.encodeNestedKLV("MSG\0", messageComp);
