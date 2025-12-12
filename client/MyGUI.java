@@ -11,6 +11,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class MyGUI implements ActionListener, KeyListener{
@@ -26,6 +27,7 @@ public class MyGUI implements ActionListener, KeyListener{
     private JTextField usernameField;
     private JTextField portField;
     private JTextField hostField;
+    private ArrayList<String> myStringList = new ArrayList<>();
     
     
     private InputStream in;
@@ -204,6 +206,7 @@ public class MyGUI implements ActionListener, KeyListener{
                 joinPanel.add(exitButton,jpc4);
                 exitButton.addActionListener(this);
 
+                // Read Button
                 GridBagConstraints jpc5 = new GridBagConstraints();
                 jpc5.gridx = 0;
                 jpc5.gridy = 4;
@@ -237,15 +240,23 @@ public class MyGUI implements ActionListener, KeyListener{
 	}
 
     public void displayText() throws Exception {
-		String message = this.username+ ": " + sendText.getText().trim();
+		String message = sendText.getText().trim();
 		// displayArea.append(message + "\n");
 		sendText.setText("");
 		sendText.requestFocus();
         System.out.println("used text");
         
         // Still needs work. For debugging for now should see a message from the running server "Recieved: MSG:....."
-        byte[] msgKVL = KLV.encodeKLV("MSG\0", message.getBytes(StandardCharsets.UTF_8));
-        System.out.println(msgKVL);
+
+        // MSG is key for the whole thing
+        // FROM is key for username
+        // BODY is key for actual message 
+        KLV.KLVMessage from = new KLV.KLVMessage("FROM", this.username.getBytes(StandardCharsets.UTF_8));
+        KLV.KLVMessage body = new KLV.KLVMessage("BODY", message.getBytes(StandardCharsets.UTF_8));
+        java.util.List<KLV.KLVMessage> messageComp = new java.util.ArrayList<>();
+        messageComp.add(from);
+        messageComp.add(body);
+        byte[] msgKVL = KLV.encodeNestedKLV("MSG\0", messageComp);
         out.write(msgKVL);
         
 	}

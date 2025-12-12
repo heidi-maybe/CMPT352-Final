@@ -27,29 +27,37 @@ public class Server {
 
     // Message queue for broadcasting thread
     private static final LinkedList<String> messageQueue = new LinkedList<>();
+    
+    // List of all active users usernames in the Chatroom
+    private static final ArrayList<String> usernames = new ArrayList<>();
 
 
     public static void main(String[] args) throws IOException {
         ServerSocket sock = null;
 
         try{
-            Broadcast broadcaster = new Broadcast(clients, messageQueue);
-            Thread broadcastThread = new Thread(broadcaster);
-            broadcastThread.setDaemon(true);
-			broadcastThread.start();
-
-            //establish the socket
             sock = new ServerSocket(DEFAULT_PORT);
+            
+            Thread broadcastThread = new Thread(new Broadcast(clients, messageQueue, usernames));
+            broadcastThread.setDaemon(true);
+            broadcastThread.start();
 
             while(true){
-                //listen for new connections and service them in a separate thread
-                Socket client = sock.accept();
-				clients.add(client);
-				Runnable task = new Connection(client, clients, messageQueue);
-				exec.execute(task);
+               //listen for new connections and service them in a separate thread
+               Socket client = sock.accept();
+               clients.add((client));
+               
+               
+               Runnable task = new Connection(client, clients, messageQueue, usernames);
+               exec.execute(task);
 
+           }
+          
+           
+            
 
-            }
+            //establish the socket
+            
 
         }
         catch (IOException ioe) { System.err.println(ioe); }
