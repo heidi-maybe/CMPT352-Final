@@ -62,7 +62,8 @@ public class Handler {
                         System.out.println("Allowed");
                         System.out.println("Received: " + message.key + ":" + valueStr);
                         synchronized(this.messageQueue) {
-                            this.messageQueue.add(valueStr);
+                            String join = "------- " + valueStr + " has joined -------";
+                            this.messageQueue.add(join);
                             usernames.add(valueStr);
                         }
                     }
@@ -70,9 +71,9 @@ public class Handler {
 
                 // A message was sent in the chatroom 
                 if (message.key.equals("MSG")) { // \0 is NULL padding and striped in the encorder so doesn't matter here (cries)
-                    String valueStr = new String(message.value, StandardCharsets.UTF_8);
-                    System.out.println(message.value.length);
-                    System.out.println("Received: " + message.key + ":" + valueStr);
+                    // String valueStr = new String(message.value, StandardCharsets.UTF_8);
+                    // System.out.println(message.value.length);
+                    // System.out.println("Received: " + message.key + ":" + valueStr);
 
                     String profile = "";
                     String content = "";
@@ -86,6 +87,7 @@ public class Handler {
                         }
                     }
 
+                    // constructing full message sent to broadcast and the rest of the clients
                     String full = profile + ": " + content;
                     synchronized(this.messageQueue) {
                         this.messageQueue.add(full);
@@ -98,7 +100,7 @@ public class Handler {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
                     // needs to be to just the one client who clicked READ. not sure yet
-                    toClient.writeBytes("------Chat History Requested------\n");
+                    toClient.writeBytes("------- Chat History Requested -------\n");
                     int full = this.messageQueue.size();
                     int history;
                     if (full >= 20) {
@@ -112,7 +114,7 @@ public class Handler {
                             toClient.flush();
                         }
                     } else {
-                        toClient.writeBytes("No Chat History\n");
+                        toClient.writeBytes("------- No Chat History -------\n");
                     }
                     
                 }
@@ -121,9 +123,11 @@ public class Handler {
                 if (message.key.equals("EXIT")) { 
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     System.out.println("Received: " + message.key + ":" + valueStr);
-                    valueStr = "------Goodbye " + valueStr + "------";
+                    valueStr = "------- Goodbye " + valueStr + " -------";
+                    
                     synchronized(this.messageQueue) {
                         this.messageQueue.add(valueStr);
+                        usernames.remove(valueStr);
                     }
                 }
 
