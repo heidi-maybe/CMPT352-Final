@@ -35,6 +35,7 @@ public class Handler {
                     break; // Connection closed
                 }
                 // When a person joins the chatroom
+                x = true;
                 if (message.key.equals("JOIN")) {
                     String valueStr = new String(message.value, StandardCharsets.UTF_8);
                     boolean letJoin = true;
@@ -53,7 +54,7 @@ public class Handler {
                             letJoin = false;
                             System.out.println("Do not allow");
                             x = false;
-                            message.key.equals("Exit");
+                            // message.key.equals("Exit");
 
                         } 
 
@@ -127,8 +128,13 @@ public class Handler {
                     
                     synchronized(this.messageQueue) {
                         this.messageQueue.add(valueStr);
-                        usernames.remove(valueStr);
+                        
                     }
+                    fromClient.close();
+                    toClient.close();
+                    client.close();
+                    usernames.remove(valueStr);
+                    clients.remove(client);
                 }
 
                 // Adding some of the KLV messages we need. Working on implementing them

@@ -326,7 +326,9 @@ public class MyGUI implements ActionListener, KeyListener{
 
         this.out.close();
         this.in.close();
+        this.connect.close();
         displayArea.setText("You have EXITED the chatroom");
+        
     }
 
     public void read() throws Exception {
