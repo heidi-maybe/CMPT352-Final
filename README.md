@@ -31,7 +31,5 @@ and
 Fill in the prompt boxes accordingly and press join button to connect to Server.
 
 ## Known Issues and Limitations
-KVL is not fully properly implemented to make and parse messages correctly. Currently our clients work with our server and can connect to other servers in the working branch. Messages in the main branch currently are encoded in KVL. However currently our server can't handle that since KVL has not been fully implemented there. 
-
 Clients exiting still needs to be tested to see if it is handling closing all of the connections correctly.
-
+Server response codes are still being implemented.
